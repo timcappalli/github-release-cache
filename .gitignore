@@ -1,0 +1,20 @@
+# Ignore everything by default
+*
+
+# Allowlist files that should be committed
+!.gitignore
+!.dockerignore
+!.env.example
+!Dockerfile
+!README.md
+!docker-compose.yml
+!go.mod
+!mise.toml
+
+# Go source directories and files
+!cmd/
+!cmd/*/
+!cmd/*/*.go
+!internal/
+!internal/*/
+!internal/*/*.go

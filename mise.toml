@@ -1,0 +1,25 @@
+[env]
+IMAGE_NAME = "github-release-cache"
+DOCKER_HOST_REGISTRY = "ghcr.io/timcappalli"
+
+
+[tasks."db"]
+description = "Build docker image with a specific version"
+usage = """
+arg "[version]" default="latest" help="The docker image version tag"
+"""
+run = "docker buildx build --build-arg VERSION={{ usage.version }} --platform linux/amd64,linux/arm64 -t $IMAGE_NAME:{{ usage.version }} ."
+
+[tasks."db:release"]
+description = "Build, tag, and push docker images for version and latest"
+usage = """
+arg "[version]" default="latest" help="The docker image version tag"
+"""
+run = [
+    "docker buildx build --build-arg VERSION={{ usage.version }} --platform linux/amd64,linux/arm64 -t $IMAGE_NAME:{{ usage.version }} .",
+    "docker tag $IMAGE_NAME:{{ usage.version }} $IMAGE_NAME:latest",
+    "docker tag $IMAGE_NAME:{{ usage.version }} $DOCKER_HOST_REGISTRY/$IMAGE_NAME:{{ usage.version }}",
+    "docker tag $IMAGE_NAME:latest $DOCKER_HOST_REGISTRY/$IMAGE_NAME:latest",
+    "docker push $DOCKER_HOST_REGISTRY/$IMAGE_NAME:{{ usage.version }}",
+    "docker push $DOCKER_HOST_REGISTRY/$IMAGE_NAME:latest"
+]

@@ -1,0 +1,29 @@
+services:
+  github-release-cache:
+    image: ghcr.io/timcappalli/github-release-cache:latest
+    container_name: github-release-cache
+    restart: unless-stopped
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - github_release_cache:/data
+    environment:
+      GITHUB_REPO: ${GITHUB_REPO}
+      GITHUB_TOKEN: ${GITHUB_TOKEN:-}
+      CHECK_INTERVAL: ${CHECK_INTERVAL:-1h}
+      CHECK_TIME: ${CHECK_TIME:-12:00:00}
+      FILES: ${FILES:-}
+      FILE_CONTAINS: ${FILE_CONTAINS:-}
+      KEEP_RELEASES: ${KEEP_RELEASES:-3}
+      INCLUDE_PRERELEASES: ${INCLUDE_PRERELEASES:-false}
+      INCLUDE_DRAFTS: ${INCLUDE_DRAFTS:-false}
+      REWRITE_URLS: ${REWRITE_URLS:-false}
+      BASE_URL: ${BASE_URL:-}
+      PER_PAGE: ${PER_PAGE:-30}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+
+volumes:
+  github_release_cache:

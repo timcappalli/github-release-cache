@@ -11,7 +11,8 @@ services:
     volumes:
       - github_release_cache:/data
     environment:
-      GITHUB_REPO: ${GITHUB_REPO}
+      CONFIG_FILE: ${CONFIG_FILE:-}
+      GITHUB_REPO: ${GITHUB_REPO:-}
       GITHUB_TOKEN: ${GITHUB_TOKEN:-}
       CHECK_INTERVAL: ${CHECK_INTERVAL:-1h}
       CHECK_TIME: ${CHECK_TIME:-12:00:00}
@@ -23,6 +24,7 @@ services:
       REWRITE_URLS: ${REWRITE_URLS:-false}
       BASE_URL: ${BASE_URL:-}
       PER_PAGE: ${PER_PAGE:-30}
+      DATA_DIR: ${DATA_DIR:-/data}
       LOG_LEVEL: ${LOG_LEVEL:-info}
 
 volumes:

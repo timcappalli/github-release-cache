@@ -33,4 +33,4 @@ USER 65532:65532
 ENTRYPOINT ["/github-release-cache"]
 
 LABEL org.opencontainers.image.source="https://github.com/timcappalli/github-release-cache"
-LABEL org.opencontainers.image.version="1.0.0"
+LABEL org.opencontainers.image.version="1.0.1"

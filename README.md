@@ -95,12 +95,21 @@ Examples:
 
 ### Multi-Repo JSON Config (`CONFIG_FILE`)
 
-For caching multiple repositories in one container, mount a JSON file and set `CONFIG_FILE=/config/config.json`:
+For caching multiple repositories in one container, mount a JSON file and set `CONFIG_FILE=/config/config.json`.
+
+When `CONFIG_FILE` is set, configuration is split as follows:
+
+- **ENV only:** `CONFIG_FILE` (path to the mounted JSON file).
+- **ENV as defaults (overridden by non-empty fields in the JSON file):**
+  - `GITHUB_TOKEN` (`github_token`) — recommended to pass via ENV so secrets aren't stored in the config file; also used as the fallback token for any entry in `repos` that doesn't set its own `github_token`.
+  - `LISTEN_ADDR` (`listen_addr`), `DATA_DIR` (`data_dir`), `CHECK_INTERVAL` (`check_interval`), `CHECK_TIME` (`check_time`), `LOG_LEVEL` (`log_level`), `GITHUB_API_URL` (`github_api_url`).
+- **Config file only (ENV values are ignored):** All per-repository settings (`GITHUB_REPO`, `HTTP_PATH`, `FILES`, `FILE_CONTAINS`, `KEEP_RELEASES`, `INCLUDE_PRERELEASES`, `INCLUDE_DRAFTS`, `REWRITE_URLS`, `BASE_URL`, `PER_PAGE`) are ignored from ENV and must be configured per entry under `repos` in the JSON file (`repo`, `path`, `files`, `file_contains`, `keep_releases`, `include_prereleases`, `include_drafts`, `rewrite_urls`, `base_url`, `per_page`, `github_token`).
 
 ```json
 {
   "listen_addr": ":8080",
   "check_interval": "1h",
+  "check_time": "12:00:00",
   "repos": [
     {
       "repo": "jxlarrea/kiosk-satellite",
@@ -115,6 +124,7 @@ For caching multiple repositories in one container, mount a JSON file and set `C
       "repo": "owner/other-app",
       "path": "/other-app/",
       "files": ["*.tar.gz"],
+      "file_contains": ["linux-amd64"],
       "include_prereleases": true
     }
   ]
